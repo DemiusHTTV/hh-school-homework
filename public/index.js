@@ -4,17 +4,36 @@ import * as view from './view.js';
 
 // Задача #1
 async function handleLogin () {
-    console.log('login')
+    const login = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+          headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        username: 'admin',
+        password: '123'
+    })
+    })
+    if (!login.ok) {
+        throw new Error('Не удалось авторизоваться')
+    }
+    const data = await login.json()
+
+    if(data.accessToken) {
+        store.setToken(data.accessToken)
+    }
 }
 
 // Задача #2
 async function handleInputChange({ target: { value }}) {
     console.log(`searchTitle changed to "${value}"`)
+    localStorage.setItem('searchTitle', value)
 }
 
 // Задача #2
 async function handleSelectChange({ target: { value }}) {
     console.log(`filterStatus changed to "${value}"`)
+    localStorage.setItem('filterStatus', value)
 }
 
 // Задача #3 и #4
